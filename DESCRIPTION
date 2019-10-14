@@ -1,11 +1,21 @@
 Package: bis557
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Functions, etc. for BIS557
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Author: Will Duke
+Maintainer: Will Duke <will.duke@yale.edu>
+Description: A set of regression functions, vignettes, and other code written for BIS557. 
+    Currently includes a broken implementation of cross validation and ridge regression. 
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
+Imports: 
+    casl,
+    foreach,
+    parallel
+Remotes: statsmaths/casl
+RoxygenNote: 6.1.1
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
