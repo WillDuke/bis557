@@ -12,11 +12,13 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+library(casl)
+library(bis557)
 ```
 
 
 
-1. CASL 2.11 Problem #5
+##1. CASL 2.11 Problem #5
 
 Consider the simple regression model with only a scalar *x* and intercept:
 $$y = \beta_0 + \beta_1 * x$$
@@ -47,6 +49,108 @@ $$
 
     For OLS, we can solve directly for the $\beta$s with the following formula:
 $$\beta = (X'X)^{-1}X'Y$$
+
+##2. Implementation of a ridge regression function that handles collinear variables. 
+
+The function `ridge_regression` in this package returns a list of $\beta$ coefficients while handling collinearity. 
+
+```{r}
+data("iris")
+iris$duplicate <- iris$Sepal.Width
+ridge_regression(Sepal.Length ~ ., iris, lambda = 0)
+```
+
+##3. Implementation of cross validation
+
+The function `cv_ridge_regression` in this package returns a list containing a tibble detailing the RMSEs, standard error of the means, and CI bounds; a plot of the lambda values tested and their corresponding RMSEs; as well as the lambda with the lowest RMSE, `lambda_min`, and the lambda 1 standard error higher, `lambda_1se`.
+
+```{r}
+data("iris")
+cv_ridge_regression(Sepal.Length ~ ., iris)
+```
+
+
+##4.Numerical Stability, Statistical Error, and Ridge Regression
+**Section 2.8 of CASL shows that as the numerical stability decreases, statistical errors increase. Reproduce
+the results and then show that using ridge regression can increase numerical stability and decrease
+statistical error.**
+
+The book provides a simulation which shows that when numerical stability decreases (in this case, when the design matrix has linearly dependent columns), the error in the estimate of beta increases.
+
+The following code returns the condition number of a $40 \times 25$ matrix of random values by taking the ratio of the max and min singular values. Simulating the error rate for the OLS beta estimate reveals that when the condition number is low, the error in estimating beta tends to be low as well.
+
+```{r}
+n <- 1000; p <- 25
+beta <- c(1, rep(0, p-1))
+X  <- matrix(rnorm(n * p), ncol = p)
+svals <- svd(X)$d
+max(svals)/min(svals)
+
+N <- 1e4; `12_errors` <- rep(0, N)
+for (k in 1:N){
+  y <- X %*% beta + rnorm(n)
+  betahat <- casl_ols_svd(X, y)
+  `12_errors`[k] <- sqrt(sum((betahat - beta)^2))
+}
+mean(`12_errors`)
+```
+
+In contrast, modifying X so that one of its columns is a linear combination of one of the others dramatically increases the condition number and the corresponding error in the $\beta$ estimate.
+
+```{r}
+n <- 1000; p <- 25
+beta <- c(1, rep(0, p-1))
+X  <- matrix(rnorm(n * p), ncol = p)
+alpha <- 0.001
+X[,1] <- X[,1] * alpha + X[,2] * (1 - alpha)
+svals <- svd(X)$d
+max(svals) / min(svals)
+```
+
+
+```{r}
+N <- 1e4; `12_errors` <- rep(0, N)
+for (k in 1:N){
+  y <- X %*% beta + rnorm(n)
+  betahat <- solve(crossprod(X), crossprod(X,y))
+  `12_errors`[k] <- sqrt(sum((betahat - beta)^2))
+}
+mean(`12_errors`)
+```
+
+Notably, the error in the estimate is substantially lower than the condition number, because (as the book describes) the condition number is a "worst case scenario", and the estimate is usually much better than that.
+
+
+We now want to show that we can increase numerical stability and improve the accuracy of our estimate using ridge regression. Taking the gradient of the ridge regression formula and solving directly for beta and the condition number, we can find that the new matrix we will inverse is: $X'X + 1_p \cdot \lambda$, and the equivalent condition number to above is: $\frac{\sigma_{max} + \lambda}{\sigma_{min} + \lambda}$. With this method, we can avoid dividing by a very small (or even zero) $\sigma_{min}$, thereby substantially reducing the condition number.
+
+As you can see below, adding a $\lambda$ of 0.13 reduces the condition number to less than a fifth of its original value.
+
+```{r}
+lambda <- 0.1307055
+svals <- svd(X)$d
+(max(svals) +  lambda) / (min(svals) + lambda)
+```
+
+By simulating the error of the estimate calculated directly with the lambda term, we can see that there is a corresponding reduction in the variance. By introducing some bias, we can reduce the statistical error of our estimate.
+
+```{r}
+N <- 1e4; `12_errors` <- rep(0, N)
+for (k in 1:N){
+  y <- X %*% beta + rnorm(n)
+  betahat <- solve(crossprod(X), crossprod(X,y))
+  `12_errors`[k] <- sqrt(sum((betahat - beta)^2))
+}
+mean(`12_errors`)
+```
+
+
+
+
+
+
+
+
+
 
 
 

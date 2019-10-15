@@ -4,17 +4,16 @@
 \alias{cv_ridge_regression}
 \title{CV for Ridge Regression}
 \usage{
-cv_ridge_regression(data, formula, folds = 2, lambdas = seq(0, 0.5,
-  0.01))
+cv_ridge_regression(formula, data, lambdas = seq(0, 1, 0.03))
 }
 \arguments{
-\item{data}{a data frame}
-
 \item{formula}{a model formula of the form `y ~ ...`}
 
-\item{folds}{the number of folds on which to cross validate (default is 2)}
+\item{data}{a data frame}
 
 \item{lambdas}{a vector of lambdas to check (default is `seq(0, 0.5, 0.01)`)}
+
+\item{folds}{the number of folds on which to cross validate (default is 2)}
 }
 \value{
 A tibble containing summary statistics of RMSEs by lambda.

@@ -11,6 +11,7 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
+library(bis557)
 ```
 
 # bis557
@@ -33,7 +34,7 @@ devtools::install_github("WillDuke/bis557")
 This package includes a variety of functions including a minimal implementation of ridge_regression:
 
 ```{r example}
-library(bis557)
+
 data("iris")
 ridge_regression(Sepal.Length ~ ., iris, lambda = 0.1)
 ```

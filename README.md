@@ -23,7 +23,7 @@ Example
 This package includes a variety of functions including a minimal implementation of ridge\_regression:
 
 ``` r
-library(bis557)
+
 data("iris")
 ridge_regression(Sepal.Length ~ ., iris, lambda = 0.1)
 #>            [,1]
