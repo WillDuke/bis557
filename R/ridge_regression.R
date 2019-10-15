@@ -9,12 +9,16 @@
 #'
 ridge_regression <- function(formula, data, lambda = 0) {
   rownames(data) <- NULL
-  X <- model.matrix(form, data)
-  Y <- data[[as.character(form)[2]]][as.numeric(rownames(X))]
-  ret <- solve( crossprod(X) + diag(rep(lambda, ncol(X))) ) %*% t(X) %*% Y
-  attributes(ret)$formula <- form
-  class(ret) <- c(class(ret), "ridge_regression")
-  ret
+  X <- model.matrix(formula, data)
+  Y <- data[[as.character(formula)[2]]][as.numeric(rownames(X))]
+
+  beta <- matrix(NA_real_, nrow = length(lambda), ncol = ncol(X))
+  svd <- svd(X)
+  D <- diag(svd$d  / (svd$d^2 + lambda))
+  beta <- svd$v %*% D %*% t(svd$u) %*% Y
+  attributes(beta)$formula <- formula
+  class(beta) <- c(class(beta), "ridge_regression")
+  beta
 }
 
 #' Predict Method for Ridge Regression
@@ -35,4 +39,5 @@ predict.ridge_regression <- function(object, ...) {
   X <- model.matrix(attributes(object)$formula, x_frame)
   X %*% object
 }
+
 

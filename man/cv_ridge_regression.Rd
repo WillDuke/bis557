@@ -12,18 +12,13 @@ cv_ridge_regression(data, formula, folds = 2, lambdas = seq(0, 0.5,
 
 \item{formula}{a model formula of the form `y ~ ...`}
 
-\item{folds}{the number of folds on which to cross validate}
+\item{folds}{the number of folds on which to cross validate (default is 2)}
 
 \item{lambdas}{a vector of lambdas to check (default is `seq(0, 0.5, 0.01)`)}
 }
 \value{
-
+A tibble containing summary statistics of RMSEs by lambda.
 }
 \description{
 CV for Ridge Regression
-}
-\examples{
-
-
-
 }

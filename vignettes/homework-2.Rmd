@@ -14,12 +14,39 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(bis557)
-```
+
 
 1. CASL 2.11 Problem #5
 
 Consider the simple regression model with only a scalar *x* and intercept:
 $$y = \beta_0 + \beta_1 * x$$
-Using the explicit formula for the inverse of a 2-by-2 matrix, write down the least squares estimators for $\hat{\beta_0}$ and $\hat{\beta_1}$
+Using the explicit formula for the inverse of a 2-by-2 matrix, write down the least squares estimators for $\hat{\beta_0}$ and $\hat{\beta_1}$.
+
+We can express the SLR model in matrix form, $Y = X\beta$, where each term represents the following matrices:
+$$\mathbf{Y}_{n \times 1} = \left[\begin{array}
+{rrr}
+y_{1} \\
+y_{2}  \\
+...  \\
+y_{n}  \\
+\end{array}\right] \hspace{1cm}
+\mathbf{X}_{n \times 1} = \left[\begin{array}
+{rrr}
+x_{1} \\
+x_{2}  \\
+...  \\
+x_{n}  \\
+\end{array}\right] \hspace{1cm}
+\mathbf{\beta} = \left[\begin{array}
+{rrr}
+\beta_{0} \\
+\beta_{1}  \\
+\end{array}\right]
+$$
+
+
+    For OLS, we can solve directly for the $\beta$s with the following formula:
+$$\beta = (X'X)^{-1}X'Y$$
+
+
+
