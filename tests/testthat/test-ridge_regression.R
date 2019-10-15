@@ -1,0 +1,41 @@
+library(testthat)
+library(MASS)
+
+context("Test the output of ridge_regression().")
+
+test_that("Your ridge_regression() function works in an easy case.", {
+
+  data(iris)
+
+  fit_lm_ridge <- MASS::lm.ridge(Sepal.Length ~ ., iris, lambda = 0.5)
+
+  fit_ridge_regression <- ridge_regression(Sepal.Length  ~ ., iris)
+
+  expect_equivalent(fit_lm$coefficients, fit_linear_model$coefficients,
+                    tolerance = 1e-5)
+})
+
+test_that("Your linear_model() function works with contrasts.", {
+
+  data(iris)
+
+  fit_linear_model <- linear_model(Sepal.Length ~ ., iris,
+                                   contrasts = list(Species = "contr.sum"))
+
+  fit_lm <- lm(Sepal.Length  ~ ., iris, contrasts = list(Species = "contr.sum"))
+
+  expect_equivalent(fit_lm$coefficients, fit_linear_model$coefficients,
+                    tolerance = 1e-5)
+})
+
+test_that("Your linear_model() function works in a tougher case.", {
+
+  data(lm_patho)
+
+  fit_linear_model <- linear_model(y ~., lm_patho)
+
+  fit_lm <- lm(y ~., lm_patho)
+
+  expect_equivalent(fit_lm$coefficients, fit_linear_model$coefficients,
+                    tolerance = 1e-5)
+})
