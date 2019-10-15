@@ -5,7 +5,7 @@ bis557
 
 <!-- badges: start -->
 <!-- badges: end -->
-The goal of bis557 is to collate function implements, vignettes, and other files from Professor Michael Kane's Computational Statistics (BIS557) taught Fall 2019.
+The goal of bis557 is to collate my function implementations, vignettes, and other files from Professor Michael Kane's Computational Statistics (BIS557) taught Fall 2019.
 
 Installation
 ------------
