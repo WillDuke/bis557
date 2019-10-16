@@ -4,7 +4,7 @@
 \alias{ridge_regression}
 \title{Ridge Regression}
 \usage{
-ridge_regression(formula, data, lambda = 0)
+ridge_regression(formula, data, lambda = 0, contrasts = NULL)
 }
 \arguments{
 \item{formula}{a formula of the form y ~ .}
@@ -17,5 +17,8 @@ ridge_regression(formula, data, lambda = 0)
 A list of beta coefficients.
 }
 \description{
-Ridge Regression
+a minimal implementation of ridge regression employing singular value decomposition.
+}
+\details{
+The bulk of the code is adapted from Professor Kane's book "A Computational Approach to Statistical Learning" as well as code examples from class. I made some modifications so that the function will pass tests and added documentation.
 }

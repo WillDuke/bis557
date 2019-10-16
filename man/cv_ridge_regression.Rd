@@ -4,20 +4,24 @@
 \alias{cv_ridge_regression}
 \title{CV for Ridge Regression}
 \usage{
-cv_ridge_regression(formula, data, lambdas = seq(0, 1, 0.03))
+cv_ridge_regression(formula, data, folds = 5, lambdas = seq(0, 1,
+  0.03), contrasts = NULL)
 }
 \arguments{
-\item{formula}{a model formula of the form `y ~ ...`}
+\item{formula}{a model formula of the form "y ~ ..."}
 
 \item{data}{a data frame}
 
-\item{lambdas}{a vector of lambdas to check (default is `seq(0, 0.5, 0.01)`)}
+\item{folds}{the number of folds on which to cross validate}
 
-\item{folds}{the number of folds on which to cross validate (default is 2)}
+\item{lambdas}{a vector of lambdas to check}
 }
 \value{
 A tibble containing summary statistics of RMSEs by lambda.
 }
 \description{
-CV for Ridge Regression
+a minimal implementation to find optimal lambdas from a given set to use in ridge regression.
+}
+\details{
+The bulk of the code is adapted from Professor Kane's example in class, which I then generalized to work within a function with some additional modifications.
 }

@@ -1,18 +1,22 @@
 #' CV for Ridge Regression
 #'
+#' @description a minimal implementation to find optimal lambdas from a given set to use in ridge regression.
+#'
 #' @param data a data frame
-#' @param formula a model formula of the form `y ~ ...`
-#' @param folds the number of folds on which to cross validate (default is 2)
-#' @param lambdas a vector of lambdas to check (default is `seq(0, 0.5, 0.01)`)
+#' @param formula a model formula of the form "y ~ ..."
+#' @param folds the number of folds on which to cross validate
+#' @param lambdas a vector of lambdas to check
 #'
 #' @return A tibble containing summary statistics of RMSEs by lambda.
 #'
 #' @import doParallel parallel casl foreach rsample dplyr ggplot2
 #' @export
 #'
-cv_ridge_regression <- function(formula, data, lambdas = seq(0, 1, 0.03)){
+#' @details The bulk of the code is adapted from Professor Kane's example in class, which I then generalized to work within a function with some additional modifications.
+#'
+cv_ridge_regression <- function(formula, data, folds = 5, lambdas = seq(0, 1, 0.03), contrasts = NULL){
 
-  folds <- vfold_cv(data[sample.int(nrow(data), as.integer(0.5*nrow(data))),], 10)
+  folds <- vfold_cv(data[sample.int(nrow(data), as.integer(0.5*nrow(data))),], folds)
 
   doParallel::registerDoParallel(parallel::detectCores(logical = FALSE))
 
@@ -21,7 +25,7 @@ cv_ridge_regression <- function(formula, data, lambdas = seq(0, 1, 0.03)){
       casl_util_rmse(
         testing(folds$splits[[i]])[[as.character(formula[2])]],
                      predict(ridge_regression(formula, training(folds$splits[[i]]),
-                                              lambda = lambda),
+                                              lambda = lambda, contrasts = contrasts),
                              testing(folds$splits[[i]]))
         )
     }
