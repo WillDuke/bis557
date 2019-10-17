@@ -15,6 +15,8 @@ cv_ridge_regression(formula, data, folds = 5, lambdas = seq(0, 1,
 \item{folds}{the number of folds on which to cross validate}
 
 \item{lambdas}{a vector of lambdas to check}
+
+\item{contrasts}{an optional list of contrasts}
 }
 \value{
 A tibble containing summary statistics of RMSEs by lambda.

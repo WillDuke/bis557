@@ -5,9 +5,10 @@
 #' @param formula a formula of the form y ~ .
 #' @param data a dataframe
 #' @param lambda ridge penalty term; default = 0
+#' @param contrasts an optional list of contrasts
 #'
 #' @details The bulk of the code is adapted from Professor Kane's book "A Computational Approach to Statistical Learning" as well as code examples from class. I added scaling and centering (modeled off of MASS:lm.ridge), reformatted the code to work in a function, edited output to pass tests, and added documentation.
-#'
+#' @importFrom stats model.matrix
 #' @return A list of beta coefficients.
 #' @export
 #'
@@ -73,8 +74,8 @@ predict.ridge_regression <- function(object, ...) {
 
   # check for bad arg
   if (!is.data.frame(x_frame)) {
-    stop(red("The first argument should be a data.frame of values",
-             "to predict"))
+    stop("The first argument should be a data.frame of values",
+             "to predict")
   }
 
   # create new model matrix and predict

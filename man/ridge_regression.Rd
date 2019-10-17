@@ -12,6 +12,8 @@ ridge_regression(formula, data, lambda = 0, contrasts = NULL)
 \item{data}{a dataframe}
 
 \item{lambda}{ridge penalty term; default = 0}
+
+\item{contrasts}{an optional list of contrasts}
 }
 \value{
 A list of beta coefficients.
@@ -20,5 +22,5 @@ A list of beta coefficients.
 a minimal implementation of ridge regression employing singular value decomposition.
 }
 \details{
-The bulk of the code is adapted from Professor Kane's book "A Computational Approach to Statistical Learning" as well as code examples from class. I made some modifications so that the function will pass tests and added documentation.
+The bulk of the code is adapted from Professor Kane's book "A Computational Approach to Statistical Learning" as well as code examples from class. I added scaling and centering (modeled off of MASS:lm.ridge), reformatted the code to work in a function, edited output to pass tests, and added documentation.
 }

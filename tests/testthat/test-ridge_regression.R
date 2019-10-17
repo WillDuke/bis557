@@ -7,7 +7,7 @@ test_that("Your ridge_regression() function works in an easy case.", {
 
   data(iris)
 
-  fit_lm_ridge <- MASS::lm.ridge(Sepal.Length ~ ., iris, lambda = 0.1)
+  fit_lm_ridge <- lm.ridge(Sepal.Length ~ ., iris, lambda = 0.1)
 
   fit_ridge_regression <- ridge_regression(Sepal.Length  ~ ., iris, lambda = 0.1)
 

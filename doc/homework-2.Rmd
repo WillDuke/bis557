@@ -96,8 +96,8 @@ Combining combining the two:
 
 $$\beta = \frac{1}{n \sum x_i^2 - (\sum x_i)^2}\left[\begin{array}
 {ccc}
-\sum x_i)^2 & -\sum x_i) \\
--\sum x_i) & n  \\
+\sum x_i^2 & -\sum x_i) \\
+-\sum x_i & n  \\
 \end{array}\right]\left[\begin{array}
 {ccc}
 \sum y_i \\
