@@ -11,7 +11,7 @@ test_that("Your ridge_regression() function works in an easy case.", {
 
   fit_ridge_regression <- ridge_regression(Sepal.Length  ~ ., iris, lambda = 0.1)
 
-  expect_equivalent(fit_lm_ridge$coef, fit_ridge_regression,
+  expect_equivalent(coef(fit_lm_ridge), fit_ridge_regression,
                     tolerance = 1e-3)
 })
 
@@ -24,7 +24,7 @@ test_that("Your linear_model() function works with contrasts.", {
 
   fit_ridge_regression <- ridge_regression(Sepal.Length  ~ ., iris, contrasts = list(Species = "contr.sum"))
 
-  expect_equivalent(fit_lm_ridge$coef, fit_ridge_regression,
+  expect_equivalent(coef(fit_lm_ridge), fit_ridge_regression,
                     tolerance = 1e-3)
 })
 
@@ -36,6 +36,6 @@ test_that("Your ridge_regression() function works in a tougher case.", {
 
   fit_ridge_regression <- ridge_regression(y ~., lm_patho)
 
-  expect_equivalent(fit_lm_ridge$coef, fit_ridge_regression,
+  expect_equivalent(coef(fit_lm_ridge), fit_ridge_regression,
                     tolerance = 1e-3)
 })
