@@ -18,11 +18,11 @@
 #' @import casl dplyr ggplot2
 #' @export
 #'
-#' @details The bulk of the code is adapted from Professor Kane's example in class, which I then generalized to work within a function with some additional modifications.
+#' @details The rmse loop and edf table are adapted from Professor Kane's example in class, which I then generalized to work within a function with some additional modifications.
 #'
 cv_ridge_regression <- function(formula, data, folds = 5, lambdas = seq(0, 1, 0.03), contrasts = NULL){
 
-  #satisfy R CMD check
+  # satisfy R CMD check
   i <- lambda <- `.` <- lower <- upper <- NULL
 
   # create folds

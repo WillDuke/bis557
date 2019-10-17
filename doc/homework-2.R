@@ -3,6 +3,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+options(mc.cores = 2)
 library(casl)
 library(bis557)
 

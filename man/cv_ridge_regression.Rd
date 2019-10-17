@@ -25,5 +25,5 @@ A tibble containing summary statistics of RMSEs by lambda.
 a minimal implementation to find optimal lambdas from a given set to use in ridge regression.
 }
 \details{
-The bulk of the code is adapted from Professor Kane's example in class, which I then generalized to work within a function with some additional modifications.
+The rmse loop and edf table are adapted from Professor Kane's example in class, which I then generalized to work within a function with some additional modifications.
 }

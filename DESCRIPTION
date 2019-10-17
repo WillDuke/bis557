@@ -1,7 +1,7 @@
 Package: bis557
 Type: Package
 Title: Functions, etc. for BIS557
-Version: 0.2.0
+Version: 0.3.0
 Author: Will Duke
 Maintainer: Will Duke <will.duke@yale.edu>
 Description: A set of regression functions, vignettes, and other code written for BIS557. 
