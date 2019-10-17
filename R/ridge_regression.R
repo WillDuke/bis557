@@ -16,12 +16,14 @@ ridge_regression <- function(formula, data, lambda = 0, contrasts = NULL) {
   # anticipate issue with folds
   rownames(data) <- NULL
 
+  # get model matrix
+  X <- model.matrix(formula, data, contrasts.arg = contrasts)
+
   # extract response variable and center
   Y <- data[[as.character(formula)[2]]][as.numeric(rownames(X))]
   Y <- Y - mean(Y)
 
   # extract response variable, center, and standardize
-  X <- model.matrix(formula, data, contrasts.arg = contrasts)
   X <- X[, -1] - rep(colMeans(X[, -1]), rep(nrow(X), ncol(X) - 1))
   Xscale <- drop(rep(1/nrow(X), nrow(X)) %*% X^2)^0.5
   X <- X/rep(Xscale, rep(nrow(X), ncol(X)))
