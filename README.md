@@ -4,7 +4,7 @@ bis557
 ======
 
 <!-- badges: start -->
-[![Travis build status](https://travis-ci.org/WillDuke/bis557.svg?branch=master)](https://travis-ci.org/WillDuke/bis557) <!-- badges: end -->
+[![Travis build status](https://travis-ci.org/WillDuke/bis557.svg?branch=master)](https://travis-ci.org/WillDuke/bis557) [![Codecov test coverage](https://codecov.io/gh/WillDuke/bis557/branch/master/graph/badge.svg)](https://codecov.io/gh/WillDuke/bis557?branch=master) <!-- badges: end -->
 
 The goal of bis557 is to collate my function implementations, vignettes, and other files from Professor Michael Kane's Computational Statistics (BIS557) taught Fall 2019.
 
@@ -26,10 +26,10 @@ This package includes a variety of functions including a minimal implementation 
 ``` r
 data("iris")
 ridge_regression(Sepal.Length ~ ., iris, lambda = 0.1)
-#>       Sepal.Width      Petal.Length       Petal.Width Speciesversicolor 
-#>         0.2185481         1.4280167        -0.2345565        -0.3184238 
-#>  Speciesvirginica 
-#>        -0.4518442 
+#>         Intercept       Sepal.Width      Petal.Length       Petal.Width 
+#>         2.1700024         0.5030907         0.8116480        -0.3087519 
+#> Speciesversicolor  Speciesvirginica 
+#>        -0.6754788        -0.9585064 
 #> attr(,"formula")
 #> Sepal.Length ~ .
 #> attr(,"class")
