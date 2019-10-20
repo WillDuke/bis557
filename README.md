@@ -4,7 +4,7 @@ bis557
 ======
 
 <!-- badges: start -->
-[![Travis build status](https://travis-ci.org/WillDuke/bis557.svg?branch=master)](https://travis-ci.org/WillDuke/bis557) [![Codecov test coverage](https://codecov.io/gh/WillDuke/bis557/branch/master/graph/badge.svg)](https://codecov.io/gh/WillDuke/bis557?branch=master) <!-- badges: end -->
+[![Travis build status](https://travis-ci.com/WillDuke/bis557.svg?branch=master)](https://travis-ci.com/WillDuke/bis557) [![Codecov test coverage](https://codecov.io/gh/WillDuke/bis557/branch/master/graph/badge.svg)](https://codecov.io/gh/WillDuke/bis557?branch=master) <!-- badges: end -->
 
 The goal of bis557 is to collate my function implementations, vignettes, and other files from Professor Michael Kane's Computational Statistics (BIS557) taught Fall 2019.
 

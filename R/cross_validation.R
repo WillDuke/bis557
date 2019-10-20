@@ -26,7 +26,7 @@ cv_ridge_regression <- function(formula, data, folds = 5, lambdas = seq(0, 1, 0.
   i <- lambda <- `.` <- lower <- upper <- NULL
 
   # create folds
-  folds <- vfold_cv(data[sample.int(nrow(data), as.integer(0.7*nrow(data))),], folds)
+  folds <- vfold_cv(data[sample.int(nrow(data), as.integer(0.5*nrow(data))),], folds)
 
   #select no. of cores for parallelizing search (use global if set, else # cores in CPU)
   if(!is.null(options("mc.cores")[[1]])){
@@ -59,13 +59,17 @@ cv_ridge_regression <- function(formula, data, folds = 5, lambdas = seq(0, 1, 0.
   lambda_min <- edf$lambda[which.min(edf$mean)]
 
   #find closest lambda 1se to the right
-  find1se <- which((edf$mean > min(edf$mean) + var(edf$mean)/length(edf$mean)))
-  lambda_1se <- edf$lambda[min(find1se[find1se > which.min(edf$mean)])]
+  find1se <- which((edf$mean >= min(edf$mean) + var(edf$mean)/length(edf$mean)))
+  nextindex <- find1se[find1se >= which.min(edf$mean)]
+  lambda_1se <- edf$lambda[ifelse(is.null(nextindex),
+                                  min(find1se[find1se >= which.min(edf$mean)]),
+                                  which.min(edf$mean))]
 
   #create a list of output with table, lambda and rmse plot, lambda_min, and lambda_1se
   list(cv_table = edf, cv_plot = {
     ggplot2::ggplot(edf, aes(x = lambdas, y = mean, ymin = lower, ymax = upper)) +
       theme_minimal() +
+      geom_errorbar(alpha = 0.3, width = 0) +
       geom_point(aes(color = "red")) +
       geom_vline(xintercept = lambda_min, linetype="dotted") +
       geom_vline(xintercept = lambda_1se, linetype="dotted") +

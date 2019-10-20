@@ -3,7 +3,7 @@
 \docType{data}
 \name{lm_patho}
 \alias{lm_patho}
-\title{Sample dataset for testing.}
+\title{Sample dataset for testing regression functions.}
 \format{A data frame with 2 rows and 3 variables.
 \describe{
   \item{y}{response}

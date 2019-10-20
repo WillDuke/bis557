@@ -28,5 +28,7 @@ Suggests:
     rmarkdown,
     testthat (>= 2.1.0),
     covr,
-    MASS
+    MASS,
+    glmnet,
+    clusterGeneration
 VignetteBuilder: knitr

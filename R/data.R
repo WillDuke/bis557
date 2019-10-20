@@ -1,4 +1,4 @@
-#' Sample dataset for testing.
+#' Sample dataset for testing regression functions.
 #'
 #' A dataset for testing tougher cases with the linear_model function in this package`.
 #'
@@ -10,3 +10,19 @@
 #' }
 #'
 "lm_patho"
+
+
+#' Sample dataset for testing cross validation.
+#'
+#' A dataset of modestly correlated variables from mvrnorm() and one response variable for testing cv_ridge_regression`.
+#'
+#' @format A data frame with 400 rows and 4 variables.
+#' \describe{
+#'   \item{response}{response}
+#'   \item{pred1}{predictor 1}
+#'   \item{pred2}{predictor 2}
+#'   \item{pred3}{predictor 3}
+#'   \item{pred4}{predictor 4}
+#' }
+#'
+"cv_test"
