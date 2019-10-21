@@ -221,4 +221,4 @@ We can re-express this in matrix notation as:
 
 $$\tilde{\beta}_l = \frac{1}{n} X^t_j Y - \lambda$$
 
-We know that if the function returns a negative or zero $\beta$, $\beta$ will be set to zero. We can see from the equation above that if $|X^t_j Y| \le n \lambda$, then $\tilde{\beta}_l$ will be negative (and thus set to zero).
+We know that if the function returns a negative or zero $\beta$, $\beta$ will be set to zero. Since $\beta$ is either squared or within an absolute value in the objective function, the result is the same regardless of the sign of $\beta$: We can see from the equation above that if $|X^t_j Y| \le n \lambda$, then $\tilde{\beta}_l$ will be negative (and thus set to zero).

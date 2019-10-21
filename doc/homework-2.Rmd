@@ -142,7 +142,7 @@ The book provides a simulation which shows that when numerical stability decreas
 The following code returns the condition number of a $40 \times 25$ matrix of random values by taking the ratio of the max and min singular values. Simulating the error rate for the OLS beta estimate reveals that when the condition number is low, the error in estimating beta tends to be low as well.
 
 ```{r}
-n <- 1000; p <- 25
+n <- 250; p <- 25
 beta <- c(1, rep(0, p-1))
 X  <- matrix(rnorm(n * p), ncol = p)
 svals <- svd(X)$d
@@ -160,7 +160,7 @@ mean(`12_errors`)
 In contrast, modifying X so that one of its columns is a linear combination of one of the others dramatically increases the condition number and the corresponding error in the $\beta$ estimate.
 
 ```{r}
-n <- 1000; p <- 25
+n <- 250; p <- 25
 beta <- c(1, rep(0, p-1))
 X  <- matrix(rnorm(n * p), ncol = p)
 alpha <- 0.001
@@ -188,12 +188,12 @@ We now want to show that we can increase numerical stability and improve the acc
 As you can see below, adding a $\lambda$ of 0.13 reduces the condition number to a fraction of its original value.
 
 ```{r}
-lambda <- 0.1307055
+lambda <- 0.3293489
 svals <- svd(X)$d
 (max(svals) +  lambda) / (min(svals) + lambda)
 ```
 
-By simulating the error of the estimate calculated directly with the lambda term, we can see that there is a corresponding reduction in the variance. By introducing some bias, we can reduce the statistical error of our estimate.
+By simulating the error of the estimate calculated directly with the lambda term, we can see that there is a corresponding (albeit small, in this case) reduction in the variance. By introducing some bias, we can reduce the statistical error of our estimate.
 
 ```{r}
 N <- 1e4; `12_errors` <- rep(0, N)
@@ -208,19 +208,17 @@ mean(`12_errors`)
 
 **Consider the LASSO penalty:**
 $$\frac{1}{2n} ||Y - X \beta||^2_2 + \lambda ||\beta||_1$$
-**Show that if $|X_j^T| \le n \lambda$, then $\hat{\beta}^{LASSO}$ must be zero.**
+**Show that if $|X_j^TY| \le n \lambda$, then $\hat{\beta}^{LASSO}$ must be zero.**
 
-We first make the assumption that the predictors in X are indpendent such that $||X||_2^2 = I$.
+The general formula for an estimated beta vector from the coordinate descent algorithm for solving the elastic net equation is:
 
-Let's divide into two cases to deal with the non-differentiability of the absolute value at 0.
+$$\tilde{\beta}_l = \frac{\frac{1}{n} \sum^n_{i=1} x_{il} (y_i -\tilde{y}^{(l)}) - \lambda \alpha}{1 - \lambda (1 - \alpha)}$$
+Setting $\alpha$ to 1 for ridge regression:
 
-$$\text{For } \beta > 0: \frac{1}{2n} ||Y - X \beta||^2_2 + \lambda ||\beta||_1$$
-$$ \frac{dl}{d\beta} = \frac{1}{n} (-X')(Y - X \beta) + \lambda = 0$$
-$$= (-X')(Y - X \beta) + n\lambda = 0$$
-$$-X'Y + X'X \beta + n\lambda = 0$$
-$$X'X \beta = X'Y - n\lambda$$
-$$\beta = (X'X)^{-1}[X'Y - n\lambda] = X'Y - n\lambda$$
-Because of the absolute value, we know that for $X_j^T Y - n \lambda < 0$ that $\hat{\beta}^{LASSO}$ must be zero.
+$$\tilde{\beta}_l = \frac{1}{n} \sum^n_{i=1} x_{il} (y_i -\tilde{y}^{(l)}) - \lambda$$
 
+We can re-express this in matrix notation as:
 
+$$\tilde{\beta}_l = \frac{1}{n} X^t_j Y - \lambda$$
 
+We know that if the function returns a negative or zero $\beta$, $\beta$ will be set to zero. Since $\beta$ is either squared or within an absolute value in the objective function, the result is the same regardless of the sign of $\beta$: We can see from the equation above that if $|X^t_j Y| \le n \lambda$, then $\tilde{\beta}_l$ will be negative (and thus set to zero).

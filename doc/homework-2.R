@@ -17,7 +17,7 @@ data("iris")
 cv_ridge_regression(Sepal.Length ~ ., iris)
 
 ## ------------------------------------------------------------------------
-n <- 1000; p <- 25
+n <- 250; p <- 25
 beta <- c(1, rep(0, p-1))
 X  <- matrix(rnorm(n * p), ncol = p)
 svals <- svd(X)$d
@@ -32,7 +32,7 @@ for (k in 1:N){
 mean(`12_errors`)
 
 ## ------------------------------------------------------------------------
-n <- 1000; p <- 25
+n <- 250; p <- 25
 beta <- c(1, rep(0, p-1))
 X  <- matrix(rnorm(n * p), ncol = p)
 alpha <- 0.001
@@ -50,7 +50,7 @@ for (k in 1:N){
 mean(`12_errors`)
 
 ## ------------------------------------------------------------------------
-lambda <- 0.1307055
+lambda <- 0.3293489
 svals <- svd(X)$d
 (max(svals) +  lambda) / (min(svals) + lambda)
 
