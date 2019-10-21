@@ -10,7 +10,7 @@ test_that("Your cv_ridge_regression() function finds the same lambda.min with th
 
   data(mtcars)
 
-  fit_cv_glmnet <- cv.glmnet(model.matrix(mpg ~ ., mtcars), as.matrix(mtcars[,1]), alpha = 0)
+  fit_cv_glmnet <- cv.glmnet(model.matrix(mpg ~ . , mtcars), as.matrix(mtcars[,1]), alpha = 0)
 
   fit_cv_ridge_regression <- cv_ridge_regression(mpg ~ ., mtcars, lambdas = fit_cv_glmnet$lambda)
 
