@@ -4,7 +4,7 @@
 \name{cv_test}
 \alias{cv_test}
 \title{Sample dataset for testing cross validation.}
-\format{A data frame with 400 rows and 4 variables.
+\format{A data frame with 200 rows and 4 variables.
 \describe{
   \item{response}{response}
   \item{pred1}{predictor 1}
@@ -16,6 +16,6 @@
 cv_test
 }
 \description{
-A dataset of modestly correlated variables from mvrnorm() and one response variable for testing cv_ridge_regression`.
+A dataset of modestly correlated variables from mvrnorm() and one response variable for testing cv_ridge_regression.
 }
 \keyword{datasets}

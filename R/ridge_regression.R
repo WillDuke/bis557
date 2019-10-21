@@ -23,7 +23,6 @@ ridge_regression <- function(formula, data, lambda = 0, contrasts = NULL) {
   # extract response variable and center
   Y <- data[[as.character(formula)[2]]][as.numeric(rownames(X))]
 
-
   # save mean for rescaling
   Xmean <- colMeans(X[, -1])
   Ymean <-mean(Y)

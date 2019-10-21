@@ -13,17 +13,19 @@
 #' @importFrom stats model.matrix
 #' @export
 
-#define linear model function with contrasts and basic collinearity handling
+# define linear model function with contrasts and basic collinearity handling
 linear_model <- function(formula, data, contrasts = NULL){
 
-  #define model matrix and response variable
+  # define model matrix and response variable
   X <- model.matrix(formula, data, contrasts.arg = contrasts)
   Y <- as.matrix(subset(data, select = as.character(formula[[2]])), ncol = 1)
 
-  #solve with qr decomposition
+  # solve with qr decomposition
   beta <- qr.solve(qr(X), Y)
-  #convert 0s to NAs
+
+  # convert 0s to NAs
   beta[beta==0] <- NA
 
+  # return same type as lm()
   list(coefficients = beta)
 }

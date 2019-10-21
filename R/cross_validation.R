@@ -36,7 +36,7 @@ cv_ridge_regression <- function(formula, data, folds = 5, lambdas = seq(0, 1, 0.
   }
   registerDoParallel(cores)
 
-  #nested loop to find root mean squared error for each lambda across folds
+  # nested loop to find root mean squared error for each lambda across folds
   rmses <- foreach(lambda = lambdas, .combine = rbind) %dopar% {
     foreach(i = seq_len(nrow(folds)), .combine = c) %do% {
       casl_util_rmse(
@@ -58,14 +58,14 @@ cv_ridge_regression <- function(formula, data, folds = 5, lambdas = seq(0, 1, 0.
   # retrieve lambda min
   lambda_min <- edf$lambda[which.min(edf$mean)]
 
-  #find closest lambda 1se to the right
-  find1se <- which((edf$mean >= min(edf$mean) + var(edf$mean)/length(edf$mean)))
-  nextindex <- find1se[find1se >= which.min(edf$mean)]
+  # find closest lambda 1se to the right
+  find1se <- which((edf$mean >= min(edf$mean) + sqrt(var(edf$mean))/length(edf$mean)))
+  nextindex <- find1se[find1se > which.min(edf$mean)]
   lambda_1se <- edf$lambda[ifelse(is.null(nextindex),
                                   min(find1se[find1se >= which.min(edf$mean)]),
                                   which.min(edf$mean))]
 
-  #create a list of output with table, lambda and rmse plot, lambda_min, and lambda_1se
+  # create a list of output with table, lambda and rmse plot, lambda_min, and lambda_1se
   list(cv_table = edf, cv_plot = {
     ggplot2::ggplot(edf, aes(x = lambdas, y = mean, ymin = lower, ymax = upper)) +
       theme_minimal() +

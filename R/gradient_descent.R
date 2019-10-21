@@ -17,28 +17,29 @@
 #' @export
 
 grad_desc <- function(formula, data, contrasts = NULL, factor = 0.0001, max_Iter = 5e5, threshold = 1e-12){
-  #define model matrix, response variable, beta_k
+
+  # define model matrix, response variable, beta_k
   X <- model.matrix(formula, data, contrasts.arg = contrasts)
   Y <- as.matrix(subset(data, select = as.character(formula[[2]])), ncol = 1)
   beta_k <- matrix(1, ncol = 1, nrow = ncol(X))
 
-  #define helper function check_r: finds sum of squared residuals
+  # define helper function check_r: finds sum of squared residuals
   check_r <- function(beta, Y, X) {
     drop(t(Y) %*% Y + t(beta) %*% t(X) %*% X %*% beta - 2 * t(Y) %*% X %*% beta)
   }
 
-  #define helper function df: takes step toward beta
+  # define helper function df: takes step toward beta
   df <- function(beta, Y, X){
     (2 * t(X) %*% X %*% beta - 2 * t(X) %*% Y)
   }
 
-  ##divert if not full rank
+  # divert if not full rank
   if(qr(X)$rank == dim(X)[2]){
     #define counter to set max number of loops
     counter = 1
     diff = 10
 
-    #initiate while loop to check for improvement in residuals and stop after a given point
+    # initiate while loop to check for improvement in residuals and stop after a given point
     while ((counter < max_Iter) & (diff > threshold)){
       r1 <- check_r(beta_k, Y, X) # check residuals
       beta_k <- beta_k - factor * df(beta_k, Y, X)  # improve beta_k
@@ -48,7 +49,7 @@ grad_desc <- function(formula, data, contrasts = NULL, factor = 0.0001, max_Iter
     }
 
 
-    #print some useful info
+    # print some useful info
     print(sprintf("Gradient descent completed after %i iterations", counter))
     print(sprintf("The final difference in the residuals was: %f,", diff))
 
@@ -56,6 +57,8 @@ grad_desc <- function(formula, data, contrasts = NULL, factor = 0.0001, max_Iter
     gd <- list(coefficients = beta_k)
     list(coefficients = setNames(as.numeric(gd$coefficients), dimnames(gd$coefficients)[[1]]))
   }
+
+  # pass to linear_model()
   else{
     warning("Data frame has perfect collinearity. Passing to linear_model().")
     linear_model(formula, data, contrasts = NULL)

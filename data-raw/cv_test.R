@@ -4,7 +4,7 @@ usethis::use_data(cv_test, overwrite = TRUE)
 
 library(tibble)
 
-n <- 400; p <- 4
+n <- 200; p <- 4
 beta <- c(1,-1,0.5,0)
 mu <- rep(0,p)
 Sigma <- matrix(0.9, nrow = p, ncol = p)
@@ -21,3 +21,5 @@ cv_test <- as_tibble(cbind(y, X)) %>% `colnames<-`(c("response", paste0(rep("pre
 # cv_test <- as_tibble(mvrnorm(n = 1000, rep(0, 6), genPositiveDefMat(6)$Sigma), .name_repair = "minimal") %>%
 #   `colnames<-`(c(paste0(rep("pred",6), 1:6))) %>%
 #   mutate(response = as.matrix(.) %*% beta + rnorm(1000, sd = 3))
+
+

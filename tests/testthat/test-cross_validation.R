@@ -8,28 +8,29 @@ test_that("Your cv_ridge_regression() function finds the same lambda.min with th
 
   skip("cv_ridge_regression is currently unstable.")
 
-  data(iris)
+  data(mtcars)
 
-  fit_cv_glmnet <- cv.glmnet(model.matrix(Sepal.Length ~ ., iris), as.matrix(iris[,1]), alpha = 0, lambda = seq(0, 1, 0.03))
+  fit_cv_glmnet <- cv.glmnet(model.matrix(mpg ~ ., mtcars), as.matrix(mtcars[,1]), alpha = 0)
 
-  fit_cv_ridge_regression <- cv_ridge_regression(Sepal.Length  ~ ., iris, folds = 2)
+  fit_cv_ridge_regression <- cv_ridge_regression(mpg ~ ., mtcars, lambdas = fit_cv_glmnet$lambda)
 
   expect_equivalent(fit_cv_glmnet$lambda.min, fit_cv_ridge_regression$lambda_min,
-                    tolerance = 1e-3)
+                    tolerance = 1e-2)
 })
 
 test_that("Your cv_ridge_regression() function works with contrasts.", {
 
   skip("cv_ridge_regression is currently unstable.")
 
-  data(iris)
+  data(mtcars)
 
-  fit_cv_glmnet <- cv.glmnet(model.matrix(Sepal.Length ~ ., iris,
+  fit_cv_glmnet <- cv.glmnet(model.matrix(mpg ~ ., mtcars,
                                           contrasts.arg = list(Species = "contr.sum")),
-                             as.matrix(iris[,1]), alpha = 0, lambda = seq(0, 1, 0.03))
+                             as.matrix(mtcars[,1]), alpha = 0)
 
-  fit_cv_ridge_regression <- cv_ridge_regression(Sepal.Length  ~ ., iris, contrasts = list(Species = "contr.sum"), folds = 2)
+  fit_cv_ridge_regression <- cv_ridge_regression(mpg ~ ., mtcars, lambdas = fit_cv_glmnet$lambda, contrasts = list(Species = "contr.sum"))
 
   expect_equivalent(fit_cv_glmnet$lambda.min, fit_cv_ridge_regression$lambda_min,
-                    tolerance = 1e-3)
+                    tolerance = 1e-2)
+
 })
