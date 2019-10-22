@@ -20,15 +20,15 @@
 #'
 #' @details The rmse loop and edf table are adapted from Professor Kane's example in class, which I then generalized to work within a function with some additional modifications.
 #'
-cv_ridge_regression <- function(formula, data, folds = 5, lambdas = seq(0, 1, 0.03), contrasts = NULL){
+cv_ridge_regression <- function(formula, data, folds = 5, lambdas = exp(seq(-2, 4, 0.1)), contrasts = NULL){
 
   # satisfy R CMD check
   i <- lambda <- `.` <- lower <- upper <- NULL
 
   # create folds
-  folds <- vfold_cv(data[sample.int(nrow(data), as.integer(0.5*nrow(data))),], folds)
+  folds <- vfold_cv(data, v = folds)
 
-  #select no. of cores for parallelizing search (use global if set, else # cores in CPU)
+  # select no. of cores for parallelizing search (use global if set, else # cores in CPU)
   if(!is.null(options("mc.cores")[[1]])){
           cores <- options("mc.cores")[[1]]
   } else {

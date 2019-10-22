@@ -55,6 +55,7 @@ ridge_regression <- function(formula, data, lambda = 0, contrasts = NULL) {
   attributes(coef)$formula <- formula
   class(coef) <- c(class(coef), "ridge_regression")
   coef
+
 }
 
 #' Predict Method for Ridge Regression

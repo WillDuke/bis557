@@ -127,8 +127,8 @@ ridge_regression(Sepal.Length ~ ., iris, lambda = 0)
 The function `cv_ridge_regression` returns a list containing a tibble detailing the RMSEs, standard error of the means, and CI bounds; a plot of the lambda values tested and their corresponding RMSEs; as well as the lambda with the lowest RMSE, `lambda_min`, and the lambda 1 standard error higher, `lambda_1se`.
 
 ```{r}
-data("iris")
-cv_ridge_regression(Sepal.Length ~ ., iris)
+data("cv_test")
+cv_ridge_regression(response ~ ., cv_test)
 ```
 
 
@@ -139,10 +139,10 @@ statistical error.**
 
 The book provides a simulation which shows that when numerical stability decreases (in this case, when the design matrix has linearly dependent columns), the error in the estimate of beta increases.
 
-The following code returns the condition number of a $40 \times 25$ matrix of random values by taking the ratio of the max and min singular values. Simulating the error rate for the OLS beta estimate reveals that when the condition number is low, the error in estimating beta tends to be low as well.
+The following code returns the condition number of a $1000 \times 25$ matrix of random values by taking the ratio of the max and min singular values. Simulating the error rate for the OLS beta estimate reveals that when the condition number is low, the error in estimating beta tends to be low as well.
 
 ```{r}
-n <- 250; p <- 25
+n <- 1000; p <- 25
 beta <- c(1, rep(0, p-1))
 X  <- matrix(rnorm(n * p), ncol = p)
 svals <- svd(X)$d
@@ -221,4 +221,4 @@ We can re-express this in matrix notation as:
 
 $$\tilde{\beta}_l = \frac{1}{n} X^t_j Y - \lambda$$
 
-We know that if the function returns a negative or zero $\beta$, $\beta$ will be set to zero. Since $\beta$ is either squared or within an absolute value in the objective function, the result is the same regardless of the sign of $\beta$: We can see from the equation above that if $|X^t_j Y| \le n \lambda$, then $\tilde{\beta}_l$ will be negative (and thus set to zero).
+We know that if the function returns a negative or zero $\beta$, $\beta$ will be set to zero (a soft threshold). Since $\beta$ is either squared or within an absolute value in the objective function, the result is the same regardless of the sign of $\beta$: We can see from the equation above that if $|X^t_j Y| \le n \lambda$, then $\tilde{\beta}_l$ will be negative (and thus set to zero).

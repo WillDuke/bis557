@@ -13,11 +13,11 @@ iris$duplicate <- iris$Sepal.Width
 ridge_regression(Sepal.Length ~ ., iris, lambda = 0)
 
 ## ------------------------------------------------------------------------
-data("iris")
-cv_ridge_regression(Sepal.Length ~ ., iris)
+data("cv_test")
+cv_ridge_regression(response ~ ., cv_test)
 
 ## ------------------------------------------------------------------------
-n <- 250; p <- 25
+n <- 1000; p <- 25
 beta <- c(1, rep(0, p-1))
 X  <- matrix(rnorm(n * p), ncol = p)
 svals <- svd(X)$d
