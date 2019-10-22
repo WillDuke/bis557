@@ -4,8 +4,8 @@
 \alias{cv_ridge_regression}
 \title{CV for Ridge Regression}
 \usage{
-cv_ridge_regression(formula, data, folds = 5, lambdas = seq(0, 1,
-  0.03), contrasts = NULL)
+cv_ridge_regression(formula, data, folds = 5, lambdas = exp(seq(-2, 4,
+  0.1)), contrasts = NULL)
 }
 \arguments{
 \item{formula}{a model formula of the form "y ~ ..."}
