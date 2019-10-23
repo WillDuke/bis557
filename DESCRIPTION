@@ -29,6 +29,5 @@ Suggests:
     testthat (>= 2.1.0),
     covr,
     MASS,
-    glmnet,
-    clusterGeneration
+    glmnet
 VignetteBuilder: knitr

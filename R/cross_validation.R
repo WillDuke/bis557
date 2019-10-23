@@ -9,16 +9,16 @@
 #' @param contrasts an optional list of contrasts
 #'
 #' @return A tibble containing summary statistics of RMSEs by lambda.
-#' @importFrom stats sd model.matrix predict var
+#' @importFrom stats sd model.matrix predict var qnorm
 #' @importFrom doParallel registerDoParallel
 #' @importFrom parallel detectCores
 #' @importFrom rsample vfold_cv testing training
 #' @importFrom foreach foreach %dopar% %do%
 #' @importFrom magrittr %>%
-#' @import casl dplyr ggplot2
+#' @import dplyr ggplot2
 #' @export
 #'
-#' @details The rmse loop and edf table are adapted from Professor Kane's example in class, which I then generalized to work within a function with some additional modifications.
+#' @details The mse loop and edf table are adapted from Professor Kane's example in class, which I then generalized to work within a function with some additional modifications.
 #'
 cv_ridge_regression <- function(formula, data, folds = 5, lambdas = exp(seq(-2, 4, 0.1)), contrasts = NULL){
 
@@ -36,33 +36,39 @@ cv_ridge_regression <- function(formula, data, folds = 5, lambdas = exp(seq(-2, 
   }
   registerDoParallel(cores)
 
+  # helper function to find MSEs
+  mse <- function(y, y_hat){
+    means <- mean((y - y_hat)^2)
+    means
+  }
+
   # nested loop to find root mean squared error for each lambda across folds
-  rmses <- foreach(lambda = lambdas, .combine = rbind) %dopar% {
+  mses <- foreach(lambda = lambdas, .combine = rbind) %dopar% {
     foreach(i = seq_len(nrow(folds)), .combine = c) %do% {
-      casl_util_rmse(
+      mse(
         testing(folds$splits[[i]])[[as.character(formula[2])]],
-                     predict(ridge_regression(formula, training(folds$splits[[i]]),
-                                              lambda = lambda, contrasts = contrasts),
-                             testing(folds$splits[[i]]))
-        )
+        predict(ridge_regression(formula, training(folds$splits[[i]]),
+                                 lambda = lambda, contrasts = contrasts),
+                testing(folds$splits[[i]]))
+      )
     }
   }
 
   # create tibble of results
-  edf <- tibble(mean = apply(rmses, 1, mean),
-                sd = apply(rmses, 1, sd),
+  edf <- tibble(mean = apply(mses, 1, mean),
+                sd = apply(mses, 1, sd),
                 lambda = lambdas) %>%
-    mutate(upper = mean + 2 * sd / nrow(.),
-           lower = mean - 2 * sd / nrow(.))
+    mutate(upper = mean + qnorm(0.975) * sd / nrow(.),
+           lower = mean - qnorm(0.975) * sd / nrow(.))
 
   # retrieve lambda min
   lambda_min <- edf$lambda[which.min(edf$mean)]
 
   # find closest lambda 1se to the right
-  find1se <- which((edf$mean >= min(edf$mean) + sqrt(var(edf$mean))/length(edf$mean)))
+  find1se <- which((edf$mean > min(edf$mean) + sqrt(var(edf$mean))/length(edf$mean)))
   nextindex <- find1se[find1se > which.min(edf$mean)]
-  lambda_1se <- edf$lambda[ifelse(is.null(nextindex),
-                                  min(find1se[find1se >= which.min(edf$mean)]),
+  lambda_1se <- edf$lambda[ifelse(!is.null(nextindex),
+                                  min(find1se[find1se > which.min(edf$mean)]),
                                   which.min(edf$mean))]
 
   # create a list of output with table, lambda and rmse plot, lambda_min, and lambda_1se
@@ -73,7 +79,7 @@ cv_ridge_regression <- function(formula, data, folds = 5, lambdas = exp(seq(-2, 
       geom_point(aes(color = "red")) +
       geom_vline(xintercept = lambda_min, linetype="dotted") +
       geom_vline(xintercept = lambda_1se, linetype="dotted") +
-      ylab("Root Mean Square Error") +
+      ylab("Mean Squared Error") +
       xlab(expression(lambda)) +
       theme(legend.position = "none")
   },

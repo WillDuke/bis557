@@ -6,16 +6,18 @@ context("Test the output of cv_ridge_regression().")
 
 test_that("Your cv_ridge_regression() function finds the same lambda.min with the same inputs in an easy case.", {
 
-  skip("cv_ridge_regression is currently unstable.")
+  skip_on_travis()
 
-  data(mtcars)
+  data(cv_test)
 
-  fit_cv_glmnet <- cv.glmnet(model.matrix(mpg ~ . , mtcars), as.matrix(mtcars[,1]), alpha = 0)
+  options(mc.cores = 2)
 
-  fit_cv_ridge_regression <- cv_ridge_regression(mpg ~ ., mtcars, lambdas = fit_cv_glmnet$lambda)
+  fit_cv_glmnet <- cv.glmnet(model.matrix(response ~ ., cv_test), as.matrix(cv_test[,1]), alpha = 0)
+
+  fit_cv_ridge_regression <- cv_ridge_regression(response ~ ., cv_test, lambdas = fit_cv_glmnet$lambda)
 
   expect_equivalent(fit_cv_glmnet$lambda.min, fit_cv_ridge_regression$lambda_min,
-                    tolerance = 1e-2)
+                    tolerance = 20)
 })
 
 test_that("Your cv_ridge_regression() function works with contrasts.", {
