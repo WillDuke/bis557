@@ -58,7 +58,7 @@ svals <- svd(X)$d
 N <- 1e4; `12_errors` <- rep(0, N)
 for (k in 1:N){
   y <- X %*% beta + rnorm(n)
-  betahat <- solve(crossprod(X) + lambda, crossprod(X,y))
+  betahat <- solve( crossprod(X) + diag(rep(lambda, ncol(X))) ) %*% t(X) %*% y
   `12_errors`[k] <- sqrt(sum((betahat - beta)^2))
 }
 mean(`12_errors`)
