@@ -124,7 +124,7 @@ ridge_regression(Sepal.Length ~ ., iris, lambda = 0)
 
 ##3. Cross Validation for `ridge_regression`
 
-The function `cv_ridge_regression` returns a list containing a tibble detailing the RMSEs, standard error of the means, and CI bounds; a plot of the lambda values tested and their corresponding RMSEs; as well as the lambda with the lowest RMSE, `lambda_min`, and the lambda 1 standard error higher, `lambda_1se`.
+The function `cv_ridge_regression` returns a list containing a tibble detailing the MSEs, standard error of the means, and CI bounds; a plot of the lambda values tested and their corresponding MSEs; as well as the lambda with the lowest MSE, `lambda_min`, and the lambda 1 standard error higher, `lambda_1se`.
 
 ```{r}
 data("cv_test")
