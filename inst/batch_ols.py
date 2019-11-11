@@ -1,10 +1,8 @@
 import csv
 
-# need to initialize batch
+def batch_ols(file, chunksize = 10, ycol = 0):
 
-def batch_ols(file, chunksize = 10, ycol = 1):
-
-    with open(file, 'r') as csvfile:
+    with open('yX_ols.csv', 'r') as csvfile:
         csvreader = csv.reader(csvfile, quoting=csv.QUOTE_NONNUMERIC)
         yX_subset = []
         i = 0
@@ -12,13 +10,18 @@ def batch_ols(file, chunksize = 10, ycol = 1):
         for row in csvreader:
             yX_subset = np.append(yX_subset, row)
             i += 1
-            if i == chunksize:
+            
+            if i == chunksize :
                 # create np array of subset
                 yXarr = np.array(yX_subset.reshape(-1, len(row)))
 
                 # separate y and X
                 y_chunk = yXarr[:,ycol]
                 X_chunk = np.array(np.delete(yXarr, ycol, axis=1))
+
+                # add intercept
+                intercept = np.repeat(1,i).reshape(-1,1)
+                X_chunk = np.hstack((intercept, X_chunk))
 
                 # compute xtx and xty for chunk
                 xtx = X_chunk.T @ X_chunk
@@ -39,7 +42,8 @@ def batch_ols(file, chunksize = 10, ycol = 1):
                 yX_subset = []
                 i = 0
                 j += 1
-    coef = np.linalg.inv(whole_xtx) @ whole_xty
+                
+    coef = np.linalg.solve(whole_xtx, whole_xty)
     return coef
             
 batch_ols("yX.csv")
