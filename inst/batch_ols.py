@@ -1,56 +1,61 @@
 import numpy as np
 import csv
 
-def crossprods(yX_subset, chunksize, ycol, row):
-    # convert to array
-    chunk = np.array(yX_subset.reshape(-1, len(row)))
+def crossprods(chunk, chunksize, ycol):
+    
     # separate y and X
-    y_chunk = chunk[:, ycol]
-    X_chunk = np.array(np.delete(chunk, ycol, axis=1))
+    y = chunk[:, ycol]
+    X = np.delete(chunk, ycol, axis=1)
 
     # add intercept
-    intercept = np.repeat(1,y_chunk.shape).reshape(-1,1)
-    X_chunk = np.hstack((intercept, X_chunk))
+    intercept = np.repeat(1,y.shape).reshape(-1,1)
+    X = np.hstack((intercept, X))
 
     # compute xtx and xty for chunk
-    xtx = X_chunk.T @ X_chunk
-    xty = (X_chunk.T @ y_chunk).reshape(-1,1)
+    xtx = X.T @ X
+    xty = (X.T @ y).reshape(-1,1)
 
     return xtx, xty
 
-def batch_ols(file, chunksize = 15, ycol = 0):
+def batch_ols(file, chunksize = 10, ycol = 0):
 
     with open(file, 'r') as csvfile:
         csvreader = csv.reader(csvfile, quoting=csv.QUOTE_NONNUMERIC)
-        yX_subset, whole_xtx, whole_xty = [],[],[]
+        chunk, XTX = [],[]
         i = 0
         for row in csvreader:
-            yX_subset = np.append(yX_subset, row)
+        
+            # append rows to chunk
+            if len(chunk) == 0:
+                chunk = np.array(row).reshape(1, -1)
+            else: 
+                chunk = np.vstack((chunk, row))
             i += 1
-
+            
+            # operate on each chunk
             if i % chunksize == 0:
+            
                 # find xtx and xty
-                xtx, xty = crossprods(yX_subset, chunksize, ycol, row)
+                xtx, xty = crossprods(chunk, chunksize, ycol)
 
                 #iteratively sum whole xtx and xty arrays
-                if len(whole_xtx) == 0:
-                    whole_xtx = xtx.copy()
-                else: whole_xtx = np.add(whole_xtx, xtx.copy())
-                if len(whole_xty) == 0:
-                    whole_xty = xty.copy()
-                else: whole_xty = np.add(whole_xty, xty.copy())
+                if len(XTX) == 0:
+                    XTX = xtx.copy()
+                    XTY = xty.copy()
+                else: 
+                    XTX = np.add(XTX, xtx)
+                    XTY = np.add(XTY, xty)
 
                 # reset subset
-                yX_subset = []
-
+                chunk = []
 
         # add last matrices if csv.shape[0] % chunksize != 0        
-        if len(yX_subset) != 0:
-            xtx, xty = crossprods(yX_subset, chunksize, ycol, row)
-            whole_xtx = np.add(whole_xtx, xtx.copy())
-            whole_xty = np.add(whole_xty, xty.copy())
+        if len(chunk) != 0:
+            xtx, xty = crossprods(chunk, chunksize, ycol)
+            XTX = np.add(XTX, xtx)
+            XTY = np.add(XTY, xty)
 
-    coef = np.linalg.solve(whole_xtx, whole_xty)
+    coef = np.linalg.solve(XTX, XTY)
 
     keys = ["V" + str(num) for num in range(0, coef.shape[0])]
     nonZeroBetas = {x:y for x,y in dict(zip(keys, coef)).items() if y != 0}
@@ -59,3 +64,5 @@ def batch_ols(file, chunksize = 15, ycol = 0):
         nonZeroBetas[key] = round(float(nonZeroBetas[key]),4)
 
     return nonZeroBetas
+             
+batch_ols("yX_ols.csv") 
