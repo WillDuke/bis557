@@ -20,7 +20,7 @@ def crossprods(yX_subset, chunksize, ycol, row):
 
 def batch_ols(file, chunksize = 15, ycol = 0):
 
-    with open('yX_ols.csv', 'r') as csvfile:
+    with open(file, 'r') as csvfile:
         csvreader = csv.reader(csvfile, quoting=csv.QUOTE_NONNUMERIC)
         yX_subset, whole_xtx, whole_xty = [],[],[]
         i = 0
