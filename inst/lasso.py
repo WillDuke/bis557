@@ -1,7 +1,9 @@
 import numpy as np
 
 def soft_thresh(a, b):
+    '''thresholding for lasso'''
 
+    # send a to zero if abs(a) less than b
     if isinstance(a, float):
         if np.abs(a) <= b:
             a = 0
@@ -14,11 +16,14 @@ def soft_thresh(a, b):
         raise("Non-float type.")
 
 def update_beta(y, X, lambda_val, b, w):
-    
-    WX = X * w[:, np.newaxis] # WX - 100 x 500
-    WX2 = np.power(X, 2) * w[:, np.newaxis] # WX2 - 100 x 500
-    Xb = X @ b # XB - 100 x 1
+    '''coordinate descent helper function that updates each coefficent once'''
 
+    # create weights and Xb
+    WX = X * w[:, np.newaxis] 
+    WX2 = np.power(X, 2) * w[:, np.newaxis] 
+    Xb = X @ b
+
+    # update each coefficient with lasso penalty
     for i in range(len(b)):
         
         Xb = Xb - np.multiply(X[:,i].reshape(-1,1), b[i])
@@ -31,11 +36,12 @@ def update_beta(y, X, lambda_val, b, w):
 
     return b
 
-def coord_descent( 
+def coord_descent(
     y, X, lambda_val, b = np.zeros((X.shape[1],1)), tol = 1e-5, \
     maxiter = 50, w = np.array(np.repeat(1, len(y))/len(y))):
+    '''lasso model selection via coordinate descent'''
 
-    # update until convergence or maxint
+    # update until convergence or maxiter
     for i in range(maxiter):
         b_old = b.copy()
         b = update_beta(y, X, lambda_val, b, w)
@@ -46,10 +52,11 @@ def coord_descent(
         if i == maxiter - 1:
             print("Function coord_descent did not converge.") 
     
+    # pair values with variable keys and drop 0'd coefs
     keys = ["V" + str(num) for num in range(1,p + 1)]
     nonZeroBetas = {x:y for x,y in dict(zip(keys, b)).items() if y != 0}
     
     for key in nonZeroBetas.keys():
-        nonZeroBetas[key] = float(nonZeroBetas[key])
+        nonZeroBetas[key] = round(float(nonZeroBetas[key]), 7)
 
     return nonZeroBetas

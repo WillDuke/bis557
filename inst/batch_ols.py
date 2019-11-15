@@ -2,7 +2,7 @@ import numpy as np
 import csv
 
 def crossprods(chunk, chunksize, ycol):
-    
+    '''compute crossproducts with intercept for batch_ols'''
     # separate y and X
     y = chunk[:, ycol]
     X = np.delete(chunk, ycol, axis=1)
@@ -18,6 +18,7 @@ def crossprods(chunk, chunksize, ycol):
     return xtx, xty
 
 def batch_ols(file, chunksize = 10, ycol = 0):
+    '''compute OLS in chunks from a csv'''
 
     with open(file, 'r') as csvfile:
         csvreader = csv.reader(csvfile, quoting=csv.QUOTE_NONNUMERIC)
@@ -38,7 +39,7 @@ def batch_ols(file, chunksize = 10, ycol = 0):
                 # find xtx and xty
                 xtx, xty = crossprods(chunk, chunksize, ycol)
 
-                #iteratively sum whole xtx and xty arrays
+                # iteratively sum whole xtx and xty arrays
                 if len(XTX) == 0:
                     XTX = xtx.copy()
                     XTY = xty.copy()
